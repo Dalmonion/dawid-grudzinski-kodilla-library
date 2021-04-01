@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BookDto {
+public final class BookDto {
     private Long titleId;
     private String title;
     private String author;

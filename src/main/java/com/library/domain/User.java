@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
-public class User {
-    private Long id;
+public final class User {
+    private Long userId;
     private String firstname;
     private String lastname;
     private LocalDate userCreationDate;
