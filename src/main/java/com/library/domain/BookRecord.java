@@ -8,14 +8,13 @@ import javax.validation.constraints.NotNull;
 @Table(name = "BOOKS_RECORD")
 public final class BookRecord {
     private Long recordId;
-    private Long bookId;
     private Status status;
+    private Book book;
 
     public BookRecord() {
     }
 
-    public BookRecord(Long bookId, Status status) {
-        this.bookId = bookId;
+    public BookRecord(Status status) {
         this.status = status;
     }
 
@@ -28,24 +27,24 @@ public final class BookRecord {
     }
 
     @NotNull
-    @Column(name = "BOOK_ID")
-    public Long getBookId() {
-        return bookId;
-    }
-
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS")
     public Status getStatus() {
         return status;
     }
 
-    private void setRecordId(Long recordId) {
-        this.recordId = recordId;
+    @ManyToOne
+    @JoinColumn(name = "BOOK_ID")
+    public Book getBook() {
+        return book;
     }
 
-    private void setBookId(Long bookId) {
-        this.bookId = bookId;
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    private void setRecordId(Long recordId) {
+        this.recordId = recordId;
     }
 
     private void setStatus(Status status) {

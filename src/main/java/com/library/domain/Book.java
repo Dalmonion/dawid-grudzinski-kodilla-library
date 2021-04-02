@@ -5,6 +5,8 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -14,6 +16,7 @@ public final class Book {
     private String title;
     private String author;
     private int releaseDate;
+    private List<BookRecord> bookRecords = new ArrayList<>();
 
     public Book() {
     }
@@ -48,6 +51,20 @@ public final class Book {
     @NotNull
     public int getReleaseDate() {
         return releaseDate;
+    }
+
+    @OneToMany(
+            targetEntity = BookRecord.class,
+            mappedBy = "book",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    public List<BookRecord> getBookRecords() {
+        return bookRecords;
+    }
+
+    public void setBookRecords(List<BookRecord> bookRecords) {
+        this.bookRecords = bookRecords;
     }
 
     private void setTitleId(Long titleId) {

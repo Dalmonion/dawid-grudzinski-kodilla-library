@@ -54,7 +54,7 @@ class KodillaLibraryApplicationTests {
             assertTrue(readBook.isPresent());
 
             //CleanUp
-            bookRepository.deleteById(id);
+//            bookRepository.deleteById(id);
         }
     }
 
@@ -87,7 +87,7 @@ class KodillaLibraryApplicationTests {
         @Test
         void testBookRecordSave() {
             //Given
-            BookRecord bookRecord = new BookRecord(2L, Status.RENTED);
+            BookRecord bookRecord = new BookRecord(Status.RENTED);
 
             //When
             recordRepository.save(bookRecord);
@@ -100,6 +100,42 @@ class KodillaLibraryApplicationTests {
             //CleanUp
             recordRepository.deleteById(id);
         }
+
+        @Test
+        void testBookSaveWithBookRecords() {
+            //Given
+            BookRecord bookRecord1 = new BookRecord(Status.AVAILABLE);
+            BookRecord bookRecord2 = new BookRecord(Status.AVAILABLE);
+            BookRecord bookRecord3 = new BookRecord(Status.DESTROYED);
+            BookRecord bookRecord4 = new BookRecord(Status.RENTED);
+            BookRecord bookRecord5 = new BookRecord(Status.RENTED);
+            Book book = new Book("titleTest", "authorTest", 2001);
+            Book book2 = new Book("titleTest2", "authorTest2", 200122);
+            book.getBookRecords().add(bookRecord1);
+            book.getBookRecords().add(bookRecord2);
+            book.getBookRecords().add(bookRecord3);
+            book2.getBookRecords().add(bookRecord4);
+            book2.getBookRecords().add(bookRecord5);
+            bookRecord1.setBook(book);
+            bookRecord2.setBook(book);
+            bookRecord3.setBook(book);
+            bookRecord4.setBook(book2);
+            bookRecord5.setBook(book2);
+
+            //When
+            bookRepository.save(book);
+            bookRepository.save(book2);
+
+            //Then
+            Long id = book.getTitleId();
+            Long id2 = book2.getTitleId();
+            assertNotEquals(0, id);
+            assertNotEquals(0, id2);
+
+            //CleanUp
+            bookRepository.deleteById(id);
+            bookRepository.deleteById(id2);
+        }
     }
 
     @Nested
@@ -109,7 +145,13 @@ class KodillaLibraryApplicationTests {
         @Test
         void testBookRentalSave() {
             //Given
-            BooksRental booksRental = new BooksRental(1L, 2L, LocalDate.now(), LocalDate.now().plusDays(7));
+            Book book = new Book("titleTest123", "authorTest123", 123);
+            BookRecord bookRecord = new BookRecord(Status.DESTROYED);
+            bookRecord.setBook(book);
+            User user = new User("firstName123", "lastname123", LocalDate.now());
+            BooksRental booksRental = new BooksRental(LocalDate.now(), LocalDate.now().plusMonths(1));
+            booksRental.setRecordId(bookRecord);
+            booksRental.setUserId(user);
 
             //When
             rentalRepository.save(booksRental);

@@ -8,17 +8,15 @@ import java.time.LocalDate;
 @Table(name = "BOOKS_RENTAL")
 public final class BooksRental {
     private Long id;
-    private Long recordId;
-    private Long userId;
+    private BookRecord recordId;
+    private User userId;
     private LocalDate rentFrom;
     private LocalDate rentTo;
 
     public BooksRental() {
     }
 
-    public BooksRental(Long recordId, Long userId, LocalDate rentFrom, LocalDate rentTo) {
-        this.recordId = recordId;
-        this.userId = userId;
+    public BooksRental(LocalDate rentFrom, LocalDate rentTo) {
         this.rentFrom = rentFrom;
         this.rentTo = rentTo;
     }
@@ -29,18 +27,6 @@ public final class BooksRental {
     @Column(name = "ID", unique = true)
     public Long getId() {
         return id;
-    }
-
-    @NotNull
-    @Column(name = "RECORD_ID")
-    public Long getRecordId() {
-        return recordId;
-    }
-
-    @NotNull
-    @Column(name = "USER_ID")
-    public Long getUserId() {
-        return userId;
     }
 
     @NotNull
@@ -55,16 +41,32 @@ public final class BooksRental {
         return rentTo;
     }
 
-    private void setId(Long id) {
-        this.id = id;
+    @OneToOne (cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name = "RECORD_ID")
+    public BookRecord getRecordId() {
+        return recordId;
     }
 
-    private void setRecordId(Long recordId) {
+    @OneToOne (cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name = "USER_ID")
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
+
+    public void setRecordId(BookRecord recordId) {
         this.recordId = recordId;
     }
 
-    private void setUserId(Long userId) {
-        this.userId = userId;
+    private void setId(Long id) {
+        this.id = id;
     }
 
     private void setRentFrom(LocalDate rentFrom) {
