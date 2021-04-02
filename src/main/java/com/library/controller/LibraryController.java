@@ -32,12 +32,16 @@ public class LibraryController {
 
     }
 
-    public UserDto updateUser(UserDto userDto) {
-        return new UserDto(1L, "userFirstNameEdited", "userLastNameEdited", LocalDate.now());
+    @RequestMapping(method = RequestMethod.PUT, value = "updateUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserDto updateUser(@RequestBody UserDto userDto) {
+        User user = userMapper.mapToUser(userDto);
+        User savedUser = service.save(user);
+        return userMapper.mapToUserDto(savedUser);
     }
 
-    public void deleteUser(Long userId) {
-
+    @RequestMapping(method = RequestMethod.DELETE, value = "deleteUser")
+    public void deleteUser(@RequestParam Long userId) {
+        service.deleteUser(userId);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getUser")
