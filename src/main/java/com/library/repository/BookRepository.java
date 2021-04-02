@@ -7,4 +7,6 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface BookRepository extends CrudRepository<Book, Long> {
+    @Override
+    Book save(Book book);
 }

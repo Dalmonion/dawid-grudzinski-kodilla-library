@@ -1,8 +1,7 @@
 package com.library.controller;
 
-import com.library.domain.User;
-import com.library.domain.UserDto;
-import com.library.domain.UserNotFoundException;
+import com.library.domain.*;
+import com.library.mapper.BookMapper;
 import com.library.mapper.UserMapper;
 import com.library.service.DbService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +17,25 @@ public class LibraryController {
 
     private final DbService service;
     private final UserMapper userMapper;
+    private final BookMapper bookMapper;
 
     @Autowired
-    public LibraryController(DbService service, UserMapper userMapper) {
+    public LibraryController(DbService service, UserMapper userMapper, BookMapper bookMapper) {
         this.service = service;
         this.userMapper = userMapper;
+        this.bookMapper = bookMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createUser", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createUser(@RequestBody UserDto userDto) {
         User user = userMapper.mapToUser(userDto);
-        service.save(user);
-
+        service.saveUser(user);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateUser", consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserDto updateUser(@RequestBody UserDto userDto) {
         User user = userMapper.mapToUser(userDto);
-        User savedUser = service.save(user);
+        User savedUser = service.saveUser(user);
         return userMapper.mapToUserDto(savedUser);
     }
 
@@ -57,4 +57,9 @@ public class LibraryController {
         return userMapper.mapToUserDtoList(users);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "createBook", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createBook(@RequestBody BookDto bookDto) {
+        Book book = bookMapper.mapToBook(bookDto);
+        service.saveBook(book);
+    }
 }

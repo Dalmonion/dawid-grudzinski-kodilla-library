@@ -2,6 +2,7 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,15 +12,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "BOOKS")
+@AllArgsConstructor
+@NoArgsConstructor
 public final class Book {
     private Long titleId;
     private String title;
     private String author;
     private int releaseDate;
     private List<BookRecord> bookRecords = new ArrayList<>();
-
-    public Book() {
-    }
 
     public Book(String title, String author, int releaseDate) {
         this.title = title;

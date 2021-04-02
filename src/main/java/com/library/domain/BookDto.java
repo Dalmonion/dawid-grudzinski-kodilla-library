@@ -15,3 +15,5 @@ public final class BookDto {
     private final int releaseDate;
     private final List<BookRecord> bookRecords;
 }
+
+
