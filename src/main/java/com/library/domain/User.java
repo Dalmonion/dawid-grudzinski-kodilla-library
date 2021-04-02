@@ -24,6 +24,13 @@ public final class User {
         this.userCreationDate = userCreationDate;
     }
 
+    public User(Long userId, String firstname, String lastname, LocalDate userCreationDate) {
+        this.userId = userId;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.userCreationDate = userCreationDate;
+    }
+
     @Id
     @NotNull
     @GeneratedValue

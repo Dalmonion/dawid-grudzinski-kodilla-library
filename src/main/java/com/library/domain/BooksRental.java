@@ -8,8 +8,8 @@ import java.time.LocalDate;
 @Table(name = "BOOKS_RENTAL")
 public final class BooksRental {
     private Long id;
-    private BookRecord recordId;
-    private User userId;
+    private User user;
+    private BookRecord record;
     private LocalDate rentFrom;
     private LocalDate rentTo;
 
@@ -41,28 +41,24 @@ public final class BooksRental {
         return rentTo;
     }
 
-    @OneToOne (cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
-    )
+    @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "RECORD_ID")
     public BookRecord getRecordId() {
-        return recordId;
+        return record;
     }
 
-    @OneToOne (cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
-    )
+    @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     public User getUserId() {
-        return userId;
+        return user;
     }
 
     public void setUserId(User userId) {
-        this.userId = userId;
+        this.user = userId;
     }
 
     public void setRecordId(BookRecord recordId) {
-        this.recordId = recordId;
+        this.record = recordId;
     }
 
     private void setId(Long id) {

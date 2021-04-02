@@ -8,8 +8,8 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public final class UserDto {
-    private Long id;
-    private String firstname;
-    private String lastname;
-    private LocalDate userCreationDate;
+    private final Long userId;
+    private final String firstname;
+    private final String lastname;
+    private final LocalDate userCreationDate;
 }

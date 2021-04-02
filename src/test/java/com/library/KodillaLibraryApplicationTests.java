@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.beans.Transient;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ class KodillaLibraryApplicationTests {
             assertTrue(readBook.isPresent());
 
             //CleanUp
-//            bookRepository.deleteById(id);
+            bookRepository.deleteById(id);
         }
     }
 
@@ -142,27 +143,36 @@ class KodillaLibraryApplicationTests {
     @DisplayName("Test for BooksRental objects")
     class BooksRentalTestSuite {
 
+        @Transient
         @Test
         void testBookRentalSave() {
             //Given
             Book book = new Book("titleTest123", "authorTest123", 123);
-            BookRecord bookRecord = new BookRecord(Status.DESTROYED);
+            BookRecord bookRecord = new BookRecord(Status.AVAILABLE);
             bookRecord.setBook(book);
+            book.getBookRecords().add(bookRecord);
             User user = new User("firstName123", "lastname123", LocalDate.now());
             BooksRental booksRental = new BooksRental(LocalDate.now(), LocalDate.now().plusMonths(1));
             booksRental.setRecordId(bookRecord);
             booksRental.setUserId(user);
 
             //When
+            bookRepository.save(book);
+            userRepository.save(user);
             rentalRepository.save(booksRental);
 
             //Then
-            Long id = booksRental.getId();
-            Optional<BooksRental> readBooksRental = rentalRepository.findById(id);
+            Long rentalId = booksRental.getId();
+            Long bookId = book.getTitleId();
+            Long userId = user.getUserId();
+
+            Optional<BooksRental> readBooksRental = rentalRepository.findById(rentalId);
             assertTrue(readBooksRental.isPresent());
 
             //CleanUp
-//            rentalRepository.deleteById(id);
+            rentalRepository.deleteById(rentalId);
+            bookRepository.deleteById(bookId);
+            userRepository.deleteById(userId);
         }
     }
 }
