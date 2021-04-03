@@ -1,11 +1,14 @@
 package com.library.domain;
 
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "BOOKS_RENTAL")
+@AllArgsConstructor
 public final class BooksRental {
     private Long id;
     private User user;

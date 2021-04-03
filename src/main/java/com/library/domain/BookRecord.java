@@ -1,10 +1,13 @@
 package com.library.domain;
 
+import lombok.AllArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 
 @Entity
+@AllArgsConstructor
 @Table(name = "BOOKS_RECORD")
 public final class BookRecord {
     private Long recordId;
