@@ -1,6 +1,7 @@
 package com.library.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -8,14 +9,12 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "BOOKS_RECORD")
 public final class BookRecord {
     private Long recordId;
     private Status status;
     private Book book;
-
-    public BookRecord() {
-    }
 
     public BookRecord(Status status) {
         this.status = status;
@@ -37,6 +36,7 @@ public final class BookRecord {
     }
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "BOOK_ID")
     public Book getBook() {
         return book;
@@ -50,7 +50,7 @@ public final class BookRecord {
         this.recordId = recordId;
     }
 
-    private void setStatus(Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

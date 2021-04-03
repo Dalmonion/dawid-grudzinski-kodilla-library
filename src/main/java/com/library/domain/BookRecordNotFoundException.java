@@ -1,2 +1,4 @@
-package com.library.domain;public class BookRecordNotFoundException {
+package com.library.domain;
+
+public class BookRecordNotFoundException extends Exception{
 }

@@ -2,6 +2,7 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,23 +10,15 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "USERS")
+@AllArgsConstructor
+@NoArgsConstructor
 public final class User {
     private Long userId;
     private String firstname;
     private String lastname;
     private LocalDate userCreationDate;
 
-    public User() {
-    }
-
     public User(String firstname, String lastname, LocalDate userCreationDate) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.userCreationDate = userCreationDate;
-    }
-
-    public User(Long userId, String firstname, String lastname, LocalDate userCreationDate) {
-        this.userId = userId;
         this.firstname = firstname;
         this.lastname = lastname;
         this.userCreationDate = userCreationDate;
