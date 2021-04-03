@@ -84,4 +84,58 @@ public class LibraryController {
         return bookRecordMapper.mapToBookRecordDto(savedRecord);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "getRecord")
+    public BookRecordDtoShort getRecord(@RequestParam Long recordId) throws BookRecordNotFoundException {
+        return bookRecordMapper.mapToBookRecordDtoShort(
+                service.getRecord(recordId).orElseThrow(BookRecordNotFoundException::new)
+        );
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "getRecordLong")
+    public BookRecordDto getRecordLong(@RequestParam Long recordId) throws BookRecordNotFoundException {
+        return bookRecordMapper.mapToBookRecordDto(
+                service.getRecord(recordId).orElseThrow(BookRecordNotFoundException::new)
+        );
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value= "getAllRecords")
+    public List<BookRecordDtoShort> getRecords() {
+        List<BookRecord> records = service.getAllRecords();
+        return bookRecordMapper.mapToBookRecordDtoListShort(records);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value= "getAvailableRecords")
+    public List<BookRecordDtoShort> getAvailableRecords() {
+        List<BookRecord> recordList = service.getAvailableRecords();
+        return bookRecordMapper.mapToBookRecordDtoListShort(recordList);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value= "getQuantityAvailableRecords")
+    public Integer getQuantityAvailableRecords() {
+        List<BookRecord> recordList = service.getAvailableRecords();
+        return recordList.size();
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "rentTheBook", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle, @RequestParam LocalDate rentUntil) throws BookRecordNotFoundException{
+
+        if (service.findBookByTitle(bookTitle)) {
+            List<BookRecordDtoShort> records = getAvailableRecords();
+            Long recordId = records.get(0).getRecordId();
+            BookRecordDto recordDto = getRecordLong(recordId);
+
+            updateRecordStatus(recordId, Status.RENTED);
+
+            BooksRentalDto booksRentalDto = new BooksRentalDto(id,);
+            BooksRental booksRental = bookRentalMapper.mapToBooksRental(booksRentalDto);
+            service.saveRental(booksRental);
+        }
+
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "createRecord", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createRecord(@RequestBody BookRecordDto bookRecordDto) {
+        BookRecord bookRecord = bookRecordMapper.mapToBookRecord(bookRecordDto);
+        service.saveRecord(bookRecord);
+    }
 }

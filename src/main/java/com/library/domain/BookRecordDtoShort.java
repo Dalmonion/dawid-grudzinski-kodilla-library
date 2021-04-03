@@ -5,11 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BookRecordDto {
+public class BookRecordDtoShort {
     private final Long recordId;
     private final Status status;
-    private Book book;
-
-
-
+    private Long bookId;
 }

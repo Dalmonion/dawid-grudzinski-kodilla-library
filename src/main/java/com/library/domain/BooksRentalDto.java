@@ -13,4 +13,10 @@ public class BooksRentalDto {
     private final BookRecord record;
     private final LocalDate rentFrom;
     private final LocalDate rentTo;
+
+//    private final Long id;
+//    private final Long userId;
+//    private final Long recordId;
+//    private final LocalDate rentFrom;
+//    private final LocalDate rentTo;
 }

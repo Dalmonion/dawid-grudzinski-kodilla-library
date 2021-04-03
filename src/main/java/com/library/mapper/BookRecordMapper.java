@@ -1,7 +1,9 @@
 package com.library.mapper;
 
+import com.library.domain.Book;
 import com.library.domain.BookRecord;
 import com.library.domain.BookRecordDto;
+import com.library.domain.BookRecordDtoShort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,9 +27,23 @@ public class BookRecordMapper {
         );
     }
 
-    public List<BookRecordDto> mapToBookRecordDtoList(final List<BookRecord> bookRecords) {
-        return bookRecords.stream()
+    public List<BookRecordDto> mapToBookRecordDtoList(final List<BookRecord> bookRecordList) {
+        return bookRecordList.stream()
                 .map(this::mapToBookRecordDto)
+                .collect(Collectors.toList());
+    }
+
+    public BookRecordDtoShort mapToBookRecordDtoShort(final BookRecord bookRecord) {
+        return new BookRecordDtoShort(
+                bookRecord.getRecordId(),
+                bookRecord.getStatus(),
+                bookRecord.getBook().getTitleId()
+        );
+    }
+
+    public List<BookRecordDtoShort> mapToBookRecordDtoListShort(final List<BookRecord> bookRecordList) {
+        return bookRecordList.stream()
+                .map(this::mapToBookRecordDtoShort)
                 .collect(Collectors.toList());
     }
 

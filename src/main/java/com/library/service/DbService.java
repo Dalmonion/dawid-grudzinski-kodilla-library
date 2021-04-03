@@ -1,9 +1,6 @@
 package com.library.service;
 
-import com.library.domain.Book;
-import com.library.domain.BookRecord;
-import com.library.domain.Status;
-import com.library.domain.User;
+import com.library.domain.*;
 import com.library.repository.BookRecordRepository;
 import com.library.repository.BookRepository;
 import com.library.repository.BooksRentalRepository;
@@ -49,5 +46,21 @@ public class DbService {
 
     public Optional<BookRecord> getRecord(Long id) {
         return bookRecordRepository.findById(id);
+    }
+
+    public List<BookRecord> getAllRecords() {
+        return bookRecordRepository.findAll();
+    }
+
+    public List<BookRecord> getAvailableRecords() {
+        return bookRecordRepository.retrieveAvailableRecords();
+    }
+
+    public boolean findBookByTitle(String title) {
+        return bookRepository.findAllByTitle(title).size() > 0;
+    }
+
+    public BooksRental saveRental(final BooksRental bookRental) {
+        return booksRentalRepository.save(bookRental);
     }
 }

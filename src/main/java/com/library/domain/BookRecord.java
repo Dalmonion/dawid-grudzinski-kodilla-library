@@ -1,12 +1,18 @@
 package com.library.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-
+@NamedQueries(
+        @NamedQuery(
+                name = "BookRecord.retrieveAvailableRecords",
+                query = "FROM BookRecord where status = 'AVAILABLE'"
+        )
+)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,6 +41,7 @@ public final class BookRecord {
         return status;
     }
 
+    @JsonBackReference
     @ManyToOne
     @NotNull
     @JoinColumn(name = "BOOK_ID")

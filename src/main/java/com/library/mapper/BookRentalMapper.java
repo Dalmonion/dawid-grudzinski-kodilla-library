@@ -1,5 +1,6 @@
 package com.library.mapper;
 
+
 import com.library.domain.BooksRental;
 import com.library.domain.BooksRentalDto;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class BookRentalMapper {
         );
     }
 
-    public List<BooksRentalDto> mapToBooksRentalDtoList(final List<BooksRental> booksRentalList) {
+    public List<BooksRentalDto> mapToBooksrentalDtoList(final List<BooksRental> booksRentalList) {
         return booksRentalList.stream()
                 .map(this::mapToBooksRentalDto)
                 .collect(Collectors.toList());
