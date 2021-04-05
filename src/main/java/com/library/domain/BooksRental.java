@@ -1,6 +1,7 @@
 package com.library.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,15 +10,13 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "BOOKS_RENTAL")
 @AllArgsConstructor
+@NoArgsConstructor
 public final class BooksRental {
     private Long id;
     private User user;
     private BookRecord record;
     private LocalDate rentFrom;
     private LocalDate rentTo;
-
-    public BooksRental() {
-    }
 
     public BooksRental(LocalDate rentFrom, LocalDate rentTo) {
         this.rentFrom = rentFrom;

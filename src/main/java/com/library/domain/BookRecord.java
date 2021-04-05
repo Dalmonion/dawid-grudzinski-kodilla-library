@@ -13,6 +13,11 @@ import javax.validation.constraints.NotNull;
                 query = "FROM BookRecord where status = 'AVAILABLE'"
         )
 )
+@NamedNativeQuery(
+        name = "BookRecord.getAvailableRecordsByBookId",
+        query = "SELECT * FROM BOOKS_RECORD WHERE BOOK_ID = :ID AND STATUS = 'AVAILABLE'",
+        resultClass = BookRecord.class
+)
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

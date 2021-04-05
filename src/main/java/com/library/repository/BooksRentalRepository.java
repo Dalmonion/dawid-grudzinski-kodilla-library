@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BooksRentalRepository extends CrudRepository<BooksRental, Long> {
+
+    @Override
+    BooksRental save(BooksRental booksRental);
 }

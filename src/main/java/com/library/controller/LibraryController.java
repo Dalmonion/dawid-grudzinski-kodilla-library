@@ -7,6 +7,7 @@ import com.library.mapper.BookRentalMapper;
 import com.library.mapper.UserMapper;
 import com.library.service.DbService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +71,12 @@ public class LibraryController {
         service.saveBook(book);
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "getBookByTitle")
+    public BookDto getBook(@RequestParam String bookTitle) {
+        Book book = service.findBookByTitle(bookTitle);
+        return bookMapper.mapToBookDto(book);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "createRecord", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createRecord(@RequestBody BookRecordDto bookRecordDto) {
         BookRecord bookRecord = bookRecordMapper.mapToBookRecord(bookRecordDto);
@@ -105,9 +112,10 @@ public class LibraryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value= "getAvailableRecords")
-    public List<BookRecordDtoShort> getAvailableRecords() {
-        List<BookRecord> recordList = service.getAvailableRecords();
-        return bookRecordMapper.mapToBookRecordDtoListShort(recordList);
+    public List<BookRecordDto> getAvailableRecords(@RequestParam String bookTitle) {
+        BookDto bookDto = getBook(bookTitle);
+        List<BookRecord> recordList = service.getAvailableRecordsByBookId(bookDto.getTitleId());
+        return bookRecordMapper.mapToBookRecordDtoList(recordList);
     }
 
     @RequestMapping(method = RequestMethod.GET, value= "getQuantityAvailableRecords")
@@ -116,26 +124,23 @@ public class LibraryController {
         return recordList.size();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "rentTheBook", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle, @RequestParam LocalDate rentUntil) throws BookRecordNotFoundException{
+    @RequestMapping(method = RequestMethod.POST, value = "rentTheBook")
+    public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentUntil) throws BookRecordNotFoundException, UserNotFoundException {
 
-        if (service.findBookByTitle(bookTitle)) {
-            List<BookRecordDtoShort> records = getAvailableRecords();
-            Long recordId = records.get(0).getRecordId();
-            BookRecordDto recordDto = getRecordLong(recordId);
+            List<BookRecordDto> records = getAvailableRecords(bookTitle);
+            if (!records.isEmpty()) {
+                Long recordId = records.get(0).getRecordId();
+                BookRecordDto recordDto = getRecordLong(recordId);
 
-            updateRecordStatus(recordId, Status.RENTED);
+                UserDto userDto = getUser(userId);
 
-            BooksRentalDto booksRentalDto = new BooksRentalDto(id,);
-            BooksRental booksRental = bookRentalMapper.mapToBooksRental(booksRentalDto);
-            service.saveRental(booksRental);
-        }
+                BooksRentalDto booksRentalDto = new BooksRentalDto(userMapper.mapToUser(userDto),
+                        bookRecordMapper.mapToBookRecord(recordDto), LocalDate.now(), rentUntil);
 
-    }
+                BooksRental booksRental = bookRentalMapper.mapToBooksRental(booksRentalDto);
+                service.saveRental(booksRental);
 
-    @RequestMapping(method = RequestMethod.POST, value = "createRecord", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createRecord(@RequestBody BookRecordDto bookRecordDto) {
-        BookRecord bookRecord = bookRecordMapper.mapToBookRecord(bookRecordDto);
-        service.saveRecord(bookRecord);
+                updateRecordStatus(recordId, Status.RENTED);
+            }
     }
 }

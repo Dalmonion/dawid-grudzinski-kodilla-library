@@ -56,8 +56,12 @@ public class DbService {
         return bookRecordRepository.retrieveAvailableRecords();
     }
 
-    public boolean findBookByTitle(String title) {
-        return bookRepository.findAllByTitle(title).size() > 0;
+    public List<BookRecord> getAvailableRecordsByBookId(Long bookId) {
+        return bookRecordRepository.getAvailableRecordsByBookId(bookId);
+    }
+
+    public Book findBookByTitle(String title) {
+        return bookRepository.findByTitle(title);
     }
 
     public BooksRental saveRental(final BooksRental bookRental) {
