@@ -67,4 +67,12 @@ public class DbService {
     public BooksRental saveRental(final BooksRental bookRental) {
         return booksRentalRepository.save(bookRental);
     }
+
+    public Optional<BooksRental> getRentalRecord(Long id) {
+        return booksRentalRepository.findById(id);
+    }
+
+    public void deleteRentalRecord(Long id) {
+        booksRentalRepository.deleteById(id);
+    }
 }

@@ -125,22 +125,34 @@ public class LibraryController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "rentTheBook")
-    public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentUntil) throws BookRecordNotFoundException, UserNotFoundException {
+    public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle,
+                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentUntil)
+            throws BookRecordNotFoundException, UserNotFoundException {
 
             List<BookRecordDto> records = getAvailableRecords(bookTitle);
             if (!records.isEmpty()) {
                 Long recordId = records.get(0).getRecordId();
                 BookRecordDto recordDto = getRecordLong(recordId);
-
                 UserDto userDto = getUser(userId);
-
                 BooksRentalDto booksRentalDto = new BooksRentalDto(userMapper.mapToUser(userDto),
                         bookRecordMapper.mapToBookRecord(recordDto), LocalDate.now(), rentUntil);
 
                 BooksRental booksRental = bookRentalMapper.mapToBooksRental(booksRentalDto);
                 service.saveRental(booksRental);
-
                 updateRecordStatus(recordId, Status.RENTED);
             }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "getRentalRecord")
+    public BooksRentalDto getRentalRecord(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException{
+        return bookRentalMapper.mapToBooksRentalDto(service.getRentalRecord(rentRecordId).
+                orElseThrow(BookRentalRecordNotFoundException::new));
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "returnBook")
+    public void returnTheBook(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException, BookRecordNotFoundException {
+        BooksRentalDto bookRentalRecord = getRentalRecord(rentRecordId);
+        updateRecordStatus(bookRentalRecord.getRecord().getRecordId(), Status.AVAILABLE);
+        service.deleteRentalRecord(rentRecordId);
     }
 }
