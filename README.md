@@ -46,7 +46,7 @@ The application contains following programmed services:
 The structure is based on a book, bookRecord, bookRentalRecord and status classes which all also are marked as entities.
 Each of above has second class, marked with a note 'Dto' for transferring data between requests and database and also
 CRUD type repositories. Requests are accepted by a controller which uses mappers objects in order next to save or read 
-from a database.
+from a MySQL database.
 
 # Tests
 The application is accompanied by the couple very basic tests for adding specific records into tables. 
