@@ -48,10 +48,6 @@ public class DbService {
         return bookRecordRepository.findById(id);
     }
 
-    public List<BookRecord> getAllRecords() {
-        return bookRecordRepository.findAll();
-    }
-
     public List<BookRecord> getAvailableRecords() {
         return bookRecordRepository.retrieveAvailableRecords();
     }

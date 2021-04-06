@@ -20,9 +20,6 @@ public interface BookRecordRepository extends CrudRepository<BookRecord, Long> {
     BookRecord save(BookRecord bookRecord);
 
     @Override
-    List<BookRecord> findAll();
-
-    @Override
     Optional<BookRecord> findById(Long id);
 
     @Query

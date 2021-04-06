@@ -86,23 +86,6 @@ class KodillaLibraryApplicationTests {
     class BookRecordTestSuite {
 
         @Test
-        void testBookRecordSave() {
-            //Given
-            BookRecord bookRecord = new BookRecord(Status.RENTED);
-
-            //When
-            recordRepository.save(bookRecord);
-
-            //Then
-            Long id = bookRecord.getRecordId();
-            Optional<BookRecord> readRecord = recordRepository.findById(id);
-            assertTrue(readRecord.isPresent());
-
-            //CleanUp
-            recordRepository.deleteById(id);
-        }
-
-        @Test
         void testBookSaveWithBookRecords() {
             //Given
             BookRecord bookRecord1 = new BookRecord(Status.AVAILABLE);

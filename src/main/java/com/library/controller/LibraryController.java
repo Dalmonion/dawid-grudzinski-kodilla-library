@@ -105,23 +105,11 @@ public class LibraryController {
         );
     }
 
-    @RequestMapping(method = RequestMethod.GET, value= "getAllRecords")
-    public List<BookRecordDtoShort> getRecords() {
-        List<BookRecord> records = service.getAllRecords();
-        return bookRecordMapper.mapToBookRecordDtoListShort(records);
-    }
-
     @RequestMapping(method = RequestMethod.GET, value= "getAvailableRecords")
     public List<BookRecordDto> getAvailableRecords(@RequestParam String bookTitle) {
         BookDto bookDto = getBook(bookTitle);
         List<BookRecord> recordList = service.getAvailableRecordsByBookId(bookDto.getTitleId());
         return bookRecordMapper.mapToBookRecordDtoList(recordList);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value= "getQuantityAvailableRecords")
-    public Integer getQuantityAvailableRecords() {
-        List<BookRecord> recordList = service.getAvailableRecords();
-        return recordList.size();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "rentTheBook")
