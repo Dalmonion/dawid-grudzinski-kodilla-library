@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class BookRecordMapper {
 
-//    private BookMapper bookMapper;
+    private BookMapper bookMapper;
 //    private BookController bookController;
 
 //    @Autowired
@@ -20,17 +20,17 @@ public class BookRecordMapper {
 //        this.bookController = bookController;
 //    }
 //
-//    @Autowired
-//    public void setBookMapper(BookMapper bookMapper) {
-//        this.bookMapper = bookMapper;
-//    }
+    @Autowired
+    public void setBookMapper(BookMapper bookMapper) {
+        this.bookMapper = bookMapper;
+    }
 
     public BookRecord mapToBookRecord(final BookRecordDto bookRecordDto) {
-//        Book book = bookMapper.mapToBook(bookRecordDto.getBook());
+        Book book = bookMapper.mapToBook(bookRecordDto.getBook());
         return new BookRecord(
                 bookRecordDto.getRecordId(),
                 bookRecordDto.getStatus(),
-                bookRecordDto.getBook()
+                book
         );
     }
 
@@ -44,11 +44,11 @@ public class BookRecordMapper {
 //    }
 
     public BookRecordDto mapToBookRecordDto(final BookRecord bookRecord) {
-//        BookDto bookDto = bookMapper.mapToBookDto(bookRecord.getBook());
+        BookDto bookDto = bookMapper.mapToBookDto(bookRecord.getBook());
         return new BookRecordDto(
                 bookRecord.getRecordId(),
                 bookRecord.getStatus(),
-                bookRecord.getBook()
+                bookDto
         );
     }
 
