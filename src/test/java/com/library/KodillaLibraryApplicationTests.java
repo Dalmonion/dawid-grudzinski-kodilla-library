@@ -116,6 +116,7 @@ class KodillaLibraryApplicationTests {
             assertNotEquals(0, id);
             assertNotEquals(0, id2);
 
+
             //CleanUp
             bookRepository.deleteById(id);
             bookRepository.deleteById(id2);

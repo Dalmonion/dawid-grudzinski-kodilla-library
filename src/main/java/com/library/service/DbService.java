@@ -1,6 +1,8 @@
 package com.library.service;
 
 import com.library.domain.*;
+import com.library.mapper.BookMapper;
+import com.library.mapper.BookRecordMapper;
 import com.library.repository.BookRecordRepository;
 import com.library.repository.BookRepository;
 import com.library.repository.BooksRentalRepository;
@@ -43,6 +45,10 @@ public class DbService {
     public BookRecord saveRecord(final BookRecord bookRecord) {
         return bookRecordRepository.save(bookRecord);
     }
+
+//    public BookRecordDto getRecord(Long id) {
+//        return bookRecordRepository.findById(id);
+// }
 
     public Optional<BookRecord> getRecord(Long id) {
         return bookRecordRepository.findById(id);

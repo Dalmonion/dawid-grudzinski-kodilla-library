@@ -91,9 +91,16 @@ public class LibraryController {
         return bookRecordMapper.mapToBookRecordDto(savedRecord);
     }
 
+//    @RequestMapping(method = RequestMethod.GET, value = "getRecord")
+//    public BookRecordDtoShort getRecord(@RequestParam Long recordId) throws BookRecordNotFoundException {
+//        return bookRecordMapper.mapToBookRecordDtoShort(
+//                service.getRecord(recordId).orElseThrow(BookRecordNotFoundException::new)
+//        );
+//    }
+
     @RequestMapping(method = RequestMethod.GET, value = "getRecord")
-    public BookRecordDtoShort getRecord(@RequestParam Long recordId) throws BookRecordNotFoundException {
-        return bookRecordMapper.mapToBookRecordDtoShort(
+    public BookRecordDto getRecord(@RequestParam Long recordId) throws BookRecordNotFoundException {
+        return bookRecordMapper.mapToBookRecordDto(
                 service.getRecord(recordId).orElseThrow(BookRecordNotFoundException::new)
         );
     }
