@@ -54,7 +54,7 @@ public final class Book {
         return releaseDate;
     }
 
-    @JsonManagedReference
+//    @JsonManagedReference
     @OneToMany(
             targetEntity = BookRecord.class,
             mappedBy = "book",

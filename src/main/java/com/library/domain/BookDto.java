@@ -13,7 +13,7 @@ public final class BookDto {
     private final String title;
     private final String author;
     private final int releaseDate;
-    private final List<BookRecord> bookRecords;
+    private final List<BookRecordDto> bookRecords;
 }
 
 

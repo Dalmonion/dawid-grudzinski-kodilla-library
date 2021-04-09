@@ -22,21 +22,6 @@ public class DbService {
     private final BookRecordRepository bookRecordRepository;
     private final BooksRentalRepository booksRentalRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
-    }
-
-    public User saveUser(final User user) {
-        return userRepository.save(user);
-    }
-
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
 
     public Book saveBook(final Book book) {
         return bookRepository.save(book);

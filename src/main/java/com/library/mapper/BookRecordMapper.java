@@ -1,8 +1,10 @@
 package com.library.mapper;
 
 import com.library.domain.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,6 +12,12 @@ import java.util.stream.Collectors;
 public class BookRecordMapper {
 
     private final BookMapper bookMapper = new BookMapper();
+
+//    @Autowired
+//    public void setBookMapper(BookMapper bookMapper) {
+//        this.bookMapper = bookMapper;
+//    }
+
     public BookRecord mapToBookRecord(final BookRecordDto bookRecordDto) {
         Book book = bookMapper.mapToBook(bookRecordDto.getBook());
         return new BookRecord(
@@ -29,17 +37,24 @@ public class BookRecordMapper {
     }
 
     public List<BookRecordDto> mapToBookRecordDtoList(final List<BookRecord> bookRecordList) {
-
-        return bookRecordList.stream()
-                .map(this::mapToBookRecordDto)
-                .collect(Collectors.toList());
+        if (bookRecordList == null) {
+            return new ArrayList<>();
+        } else {
+            return bookRecordList.stream()
+                    .map(this::mapToBookRecordDto)
+                    .collect(Collectors.toList());
+        }
     }
 
     public List<BookRecord> mapToBookRecordList(final List<BookRecordDto> bookRecordDtoList) {
+        if (bookRecordDtoList == null) {
+            return new ArrayList<>();
+        } else {
+            return bookRecordDtoList.stream()
+                    .map(this::mapToBookRecord)
+                    .collect(Collectors.toList());
+        }
 
-        return bookRecordDtoList.stream()
-                .map(this::mapToBookRecord)
-                .collect(Collectors.toList());
     }
 
     public BookRecordDtoShort mapToBookRecordDtoShort(final BookRecord bookRecord) {

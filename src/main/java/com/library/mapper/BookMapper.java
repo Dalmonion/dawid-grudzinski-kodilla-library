@@ -4,6 +4,9 @@ import com.library.domain.Book;
 import com.library.domain.BookDto;
 import com.library.domain.BookRecord;
 import com.library.domain.BookRecordDto;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,13 +16,21 @@ import java.util.stream.Collectors;
 public class BookMapper {
 
 
+    private BookRecordMapper bookRecordMapper;
+
+    @Autowired
+    public void setBookRecordMapper(BookRecordMapper bookRecordMapper) {
+        this.bookRecordMapper = bookRecordMapper;
+    }
+
     public Book mapToBook(final BookDto bookDto) {
+
         return new Book(
                 bookDto.getTitleId(),
                 bookDto.getTitle(),
                 bookDto.getAuthor(),
                 bookDto.getReleaseDate(),
-                bookDto.getBookRecords()
+                bookRecordMapper.mapToBookRecordList(bookDto.getBookRecords())
         );
     }
 
@@ -29,7 +40,7 @@ public class BookMapper {
                 book.getTitle(),
                 book.getAuthor(),
                 book.getReleaseDate(),
-                book.getBookRecords()
+                bookRecordMapper.mapToBookRecordDtoList(book.getBookRecords())
         );
     }
 
@@ -38,4 +49,6 @@ public class BookMapper {
                 .map(this::mapToBookDto)
                 .collect(Collectors.toList());
     }
+
+
 }

@@ -46,7 +46,7 @@ public final class BookRecord {
         return status;
     }
 
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToOne
     @NotNull
     @JoinColumn(name = "BOOK_ID")
