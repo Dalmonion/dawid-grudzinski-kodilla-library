@@ -20,12 +20,13 @@ public final class Book {
     private String title;
     private String author;
     private int releaseDate;
-    private List<BookRecord> bookRecords = new ArrayList<>();
+    private List<BookRecord> bookRecords;
 
     public Book(String title, String author, int releaseDate) {
         this.title = title;
         this.author = author;
         this.releaseDate = releaseDate;
+        this.bookRecords = new ArrayList<>();
     }
 
     @Id
@@ -54,7 +55,7 @@ public final class Book {
         return releaseDate;
     }
 
-//    @JsonManagedReference
+    @JsonManagedReference
     @OneToMany(
             targetEntity = BookRecord.class,
             mappedBy = "book",

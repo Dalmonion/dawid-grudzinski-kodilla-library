@@ -1,5 +1,6 @@
 package com.library.mapper;
 
+import com.library.controller.BookController;
 import com.library.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,50 +12,57 @@ import java.util.stream.Collectors;
 @Service
 public class BookRecordMapper {
 
-    private final BookMapper bookMapper = new BookMapper();
+//    private BookMapper bookMapper;
+//    private BookController bookController;
 
+//    @Autowired
+//    public void setBookController(BookController bookController) {
+//        this.bookController = bookController;
+//    }
+//
 //    @Autowired
 //    public void setBookMapper(BookMapper bookMapper) {
 //        this.bookMapper = bookMapper;
 //    }
 
     public BookRecord mapToBookRecord(final BookRecordDto bookRecordDto) {
-        Book book = bookMapper.mapToBook(bookRecordDto.getBook());
+//        Book book = bookMapper.mapToBook(bookRecordDto.getBook());
         return new BookRecord(
                 bookRecordDto.getRecordId(),
                 bookRecordDto.getStatus(),
-                book
+                bookRecordDto.getBook()
         );
     }
 
+//    public BookRecord mapToBookRecordShort(final BookRecordDtoShort bookRecordDtoShort) {
+//        Book book = bookMapper.mapToBook(bookRecordDtoShort.getBook());
+//        return new BookRecord(
+//                bookRecordDtoShort.getRecordId(),
+//                bookRecordDtoShort.getStatus(),
+//                book
+//        );
+//    }
+
     public BookRecordDto mapToBookRecordDto(final BookRecord bookRecord) {
-        BookDto bookDto = bookMapper.mapToBookDto(bookRecord.getBook());
+//        BookDto bookDto = bookMapper.mapToBookDto(bookRecord.getBook());
         return new BookRecordDto(
                 bookRecord.getRecordId(),
                 bookRecord.getStatus(),
-                bookDto
+                bookRecord.getBook()
         );
     }
 
     public List<BookRecordDto> mapToBookRecordDtoList(final List<BookRecord> bookRecordList) {
-        if (bookRecordList == null) {
-            return new ArrayList<>();
-        } else {
-            return bookRecordList.stream()
-                    .map(this::mapToBookRecordDto)
-                    .collect(Collectors.toList());
-        }
+        return bookRecordList.stream()
+                .map(this::mapToBookRecordDto)
+                .collect(Collectors.toList());
     }
 
     public List<BookRecord> mapToBookRecordList(final List<BookRecordDto> bookRecordDtoList) {
-        if (bookRecordDtoList == null) {
-            return new ArrayList<>();
-        } else {
+
             return bookRecordDtoList.stream()
                     .map(this::mapToBookRecord)
                     .collect(Collectors.toList());
-        }
-
     }
 
     public BookRecordDtoShort mapToBookRecordDtoShort(final BookRecord bookRecord) {

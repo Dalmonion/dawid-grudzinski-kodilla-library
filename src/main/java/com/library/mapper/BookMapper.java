@@ -1,9 +1,6 @@
 package com.library.mapper;
 
-import com.library.domain.Book;
-import com.library.domain.BookDto;
-import com.library.domain.BookRecord;
-import com.library.domain.BookRecordDto;
+import com.library.domain.*;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,7 +21,6 @@ public class BookMapper {
     }
 
     public Book mapToBook(final BookDto bookDto) {
-
         return new Book(
                 bookDto.getTitleId(),
                 bookDto.getTitle(),
@@ -41,6 +37,20 @@ public class BookMapper {
                 book.getAuthor(),
                 book.getReleaseDate(),
                 bookRecordMapper.mapToBookRecordDtoList(book.getBookRecords())
+        );
+    }
+
+    public BookDtoShort mapToBookDtoShort(final Book book) {
+        List<Long> recordsIdList = book.getBookRecords().stream()
+                .map(record -> record.getRecordId())
+                .collect(Collectors.toList());
+
+        return new BookDtoShort(
+                book.getTitleId(),
+                book.getTitle(),
+                book.getAuthor(),
+                book.getReleaseDate(),
+                recordsIdList
         );
     }
 

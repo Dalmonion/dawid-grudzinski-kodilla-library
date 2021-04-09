@@ -8,8 +8,5 @@ import lombok.Getter;
 public class BookRecordDto {
     private final Long recordId;
     private final Status status;
-    private BookDto book;
-
-
-
+    private Book book;
 }

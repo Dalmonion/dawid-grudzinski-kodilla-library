@@ -36,6 +36,11 @@ public class BookRecordController {
         service.saveRecord(bookRecordDto);
     }
 
+//    @RequestMapping(method = RequestMethod.POST, value = "createRecordShort", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public void createRecordShort(@RequestBody BookRecordDtoShort bookRecordDtoShort) {
+//        service.saveRecordShort(bookRecordDtoShort);
+//    }
+
 //    @RequestMapping(method = RequestMethod.PUT, value = "updateRecordStatus")
 //    public BookRecordDto updateRecordStatus(@RequestParam Long recordId, @RequestParam Status status) throws BookRecordNotFoundException {
 //        BookRecord bookRecord = service.getRecord(recordId).orElseThrow(BookRecordNotFoundException::new);
@@ -77,7 +82,7 @@ public class BookRecordController {
 //    }
 
     @RequestMapping(method = RequestMethod.GET, value = "getAvailableRecords")
-    public List<BookRecordDto> getAvailableRecords(@RequestParam String bookTitle) {
+    public List<BookRecordDto> getAvailableRecords(@RequestParam String bookTitle) throws BookNotFoundException {
         return service.getAvailableRecordsByBookId(bookTitle);
     }
 
@@ -103,7 +108,7 @@ public class BookRecordController {
     @RequestMapping(method = RequestMethod.POST, value = "rentTheBook")
     public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle,
                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentUntil)
-            throws BookRecordNotFoundException, UserNotFoundException {
+            throws BookRecordNotFoundException, UserNotFoundException, BookNotFoundException {
         service.rent(userId, bookTitle, rentUntil);
     }
 
