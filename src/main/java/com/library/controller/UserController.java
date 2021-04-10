@@ -3,7 +3,6 @@ package com.library.controller;
 
 import com.library.domain.UserDto;
 import com.library.domain.UserNotFoundException;
-import com.library.mapper.UserMapper;
 import com.library.service.UserDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,35 +15,33 @@ import java.util.List;
 public class UserController {
 
     private final UserDbService service;
-    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserDbService service, UserMapper userMapper) {
+    public UserController(UserDbService service) {
         this.service = service;
-        this.userMapper = userMapper;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "createUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createUser(@RequestBody UserDto userDto) {
         service.saveUser(userDto);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "updateUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "users/1", consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserDto updateUser(@RequestBody UserDto userDto) {
         return service.updateUser(userDto);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "deleteUser")
+    @DeleteMapping(value = "users/1")
     public void deleteUser(@RequestParam Long userId) {
         service.deleteUser(userId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getUser")
+    @GetMapping(value = "users/1")
     public UserDto getUser(@RequestParam Long userId) throws UserNotFoundException {
         return service.getUser(userId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value= "getUsers")
+    @GetMapping(value = "users")
     public List<UserDto> getUsers() {
         return service.getAllUsers();
     }

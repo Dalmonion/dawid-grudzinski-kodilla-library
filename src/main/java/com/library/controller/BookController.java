@@ -18,18 +18,12 @@ public class BookController {
         this.service = service;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "createBook", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createBook(@RequestBody BookDto bookDto) {
         service.saveBook(bookDto);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getBookByTitle")
-    public BookDto getBook(@RequestParam String bookTitle) throws BookNotFoundException {
-        return service.findBookByTitle(bookTitle);
-    }
-
-
-    @RequestMapping(method = RequestMethod.GET, value = "getBookById")
+    @GetMapping(value = "/books/1")
     public BookDto getBookById(@RequestParam Long bookId) throws BookNotFoundException {
         return service.findBookById(bookId);
     }

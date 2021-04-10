@@ -3,11 +3,9 @@ package com.library.controller;
 import com.library.domain.*;
 import com.library.service.BookRecordDbService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,32 +19,23 @@ public class BookRecordController {
         this.service = service;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "createRecord", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createRecord(@RequestBody BookRecordDto bookRecordDto) throws BookNotFoundException{
+    @PostMapping(value = "/bookRecords", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createRecord(@RequestBody BookRecordDto bookRecordDto) throws BookNotFoundException {
         service.saveRecord(bookRecordDto);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "updateRecordStatus")
+    @PutMapping(value = "/bookRecords/1")
     public BookRecordDto updateRecordStatus(@RequestParam Long recordId, @RequestParam Status status) throws BookRecordNotFoundException, BookNotFoundException {
         return service.updateRecord(recordId, status);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getRecord")
+    @GetMapping(value = "/bookRecords/1")
     public BookRecordDto getRecord(@RequestParam Long recordId) throws BookNotFoundException, BookRecordNotFoundException {
         return service.getRecord(recordId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "getAvailableRecords")
+    @GetMapping(value = "/bookRecords")
     public List<BookRecordDto> getAvailableRecords(@RequestParam String bookTitle) throws BookNotFoundException, BookRecordNotFoundException {
         return service.getAvailableRecordsByBookId(bookTitle);
     }
-
-    @RequestMapping(method = RequestMethod.POST, value = "rentTheBook")
-    public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle,
-                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentUntil)
-            throws BookRecordNotFoundException, UserNotFoundException, BookNotFoundException {
-        service.rent(userId, bookTitle, rentUntil);
-    }
-
-
 }

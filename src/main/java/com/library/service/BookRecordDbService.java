@@ -14,20 +14,13 @@ public class BookRecordDbService {
 
     private final BookRecordRepository bookRecordRepository;
     private final BookRecordMapper bookRecordMapper;
-    private final UserMapper userMapper;
-    private final BookRentalDbService bookRentalDbService;
     private final BookDbService bookDbService;
-    private final UserDbService userDbService;
 
     public BookRecordDbService(BookRecordRepository bookRecordRepository, BookRecordMapper bookRecordMapper,
-                               UserMapper userMapper, BookRentalDbService bookRentalDbService,
-                               BookDbService bookDbService, UserDbService userDbService) {
+                               BookDbService bookDbService) {
         this.bookRecordRepository = bookRecordRepository;
         this.bookRecordMapper = bookRecordMapper;
-        this.userMapper = userMapper;
-        this.bookRentalDbService = bookRentalDbService;
         this.bookDbService = bookDbService;
-        this.userDbService = userDbService;
     }
 
     public BookRecord saveRecord(BookRecordDto bookRecordDto) throws BookNotFoundException {
@@ -64,23 +57,6 @@ public class BookRecordDbService {
             throw new BookRecordNotFoundException();
         } else {
             return bookRecordMapper.mapToBookRecordDtoList(recordList, bookDto);
-        }
-    }
-
-    public void rent(Long userId, String bookTitle, LocalDate rentUntil) throws BookRecordNotFoundException,
-            UserNotFoundException, BookNotFoundException {
-
-        List<BookRecordDto> records = getAvailableRecordsByBookId(bookTitle);
-        if (!records.isEmpty()) {
-            Long recordId = records.get(0).getRecordId();
-            BookRecordDto recordDto = getRecord(recordId);
-            UserDto userDto = userDbService.getUser(userId);
-            Book book = bookDbService.findBookByTitleLong(bookTitle);
-
-            BooksRental booksRental = new BooksRental(userMapper.mapToUser(userDto),
-                    bookRecordMapper.mapToBookRecord(recordDto, book), LocalDate.now(), rentUntil);
-            bookRentalDbService.saveRental(booksRental);
-            updateRecord(recordId, Status.RENTED);
         }
     }
 }
