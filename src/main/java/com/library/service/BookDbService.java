@@ -9,7 +9,6 @@ import com.library.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +22,12 @@ public class BookDbService {
         return bookRepository.save(book);
     }
 
-    public BookDto findBookByTitle(String title) throws BookNotFoundException{
+    public BookDto findBookByTitle(String title) throws BookNotFoundException {
         Book book = bookRepository.findByTitle(title).orElseThrow(BookNotFoundException::new);
         return bookMapper.mapToBookDto(book);
     }
 
-    public Book findBookByTitleLong(String title) throws BookNotFoundException{
+    public Book findBookByTitleLong(String title) throws BookNotFoundException {
         return bookRepository.findByTitle(title).orElseThrow(BookNotFoundException::new);
     }
 

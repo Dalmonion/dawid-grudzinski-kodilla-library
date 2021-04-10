@@ -1,22 +1,13 @@
 package com.library.service;
 
-import com.library.controller.BookController;
-import com.library.controller.BookRecordController;
-import com.library.controller.UserController;
 import com.library.domain.*;
-import com.library.mapper.BookMapper;
 import com.library.mapper.BookRecordMapper;
-import com.library.mapper.BookRentalMapper;
 import com.library.mapper.UserMapper;
 import com.library.repository.BookRecordRepository;
-import com.library.repository.BooksRentalRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookRecordDbService {
@@ -39,16 +30,11 @@ public class BookRecordDbService {
         this.userDbService = userDbService;
     }
 
-    public BookRecord saveRecord(BookRecordDto bookRecordDto) throws BookNotFoundException{
+    public BookRecord saveRecord(BookRecordDto bookRecordDto) throws BookNotFoundException {
         Book book = bookDbService.findBookByIdLong(bookRecordDto.getBook().getTitleId());
         BookRecord bookRecord = bookRecordMapper.mapToBookRecord(bookRecordDto, book);
         return bookRecordRepository.save(bookRecord);
     }
-
-//    public BookRecord saveRecordShort(final BookRecordDtoShort bookRecordDtoShort) {
-//        BookRecord bookRecord = bookRecordMapper.mapToBookRecordShort(bookRecordDtoShort);
-//        return bookRecordRepository.save(bookRecord);
-//    }
 
     public BookRecordDto updateRecord(Long recordId, Status status) throws BookRecordNotFoundException, BookNotFoundException {
         BookRecord bookRecord = getRecordLong(recordId);
@@ -61,27 +47,17 @@ public class BookRecordDbService {
 
     }
 
-//    public BookRecordDto getRecord(Long id) throws BookRecordNotFoundException{
-//        BookRecord bookRecord = bookRecordRepository.findById(id).orElseThrow(BookRecordNotFoundException::new);
-//        return bookRecordMapper.mapToBookRecordDto(bookRecord);
-//    }
-
-    public BookRecordDto getRecord(Long id) throws BookNotFoundException, BookRecordNotFoundException{
+    public BookRecordDto getRecord(Long id) throws BookNotFoundException, BookRecordNotFoundException {
         BookRecord bookRecord = bookRecordRepository.findById(id).orElseThrow(BookRecordNotFoundException::new);
         BookDto bookDto = bookDbService.findBookById(bookRecord.getBook().getTitleId());
         return bookRecordMapper.mapToBookRecordDto(bookRecord, bookDto);
     }
 
-    private BookRecord getRecordLong(Long id) throws BookNotFoundException, BookRecordNotFoundException{
+    private BookRecord getRecordLong(Long id) throws BookRecordNotFoundException {
         return bookRecordRepository.findById(id).orElseThrow(BookRecordNotFoundException::new);
     }
 
-
-//    public List<BookRecord> getAvailableRecords() {
-//        return bookRecordRepository.retrieveAvailableRecords();
-//    }
-
-    public List<BookRecordDto> getAvailableRecordsByBookId(String bookTitle) throws BookNotFoundException, BookRecordNotFoundException{
+    public List<BookRecordDto> getAvailableRecordsByBookId(String bookTitle) throws BookNotFoundException, BookRecordNotFoundException {
         BookDto bookDto = bookDbService.findBookByTitle(bookTitle);
         List<BookRecord> recordList = bookRecordRepository.getAvailableRecordsByBookId(bookDto.getTitleId());
         if (recordList.isEmpty()) {
@@ -89,7 +65,6 @@ public class BookRecordDbService {
         } else {
             return bookRecordMapper.mapToBookRecordDtoList(recordList, bookDto);
         }
-
     }
 
     public void rent(Long userId, String bookTitle, LocalDate rentUntil) throws BookRecordNotFoundException,

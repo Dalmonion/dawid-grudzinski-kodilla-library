@@ -2,11 +2,7 @@ package com.library.mapper;
 
 
 import com.library.domain.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BookRentalMapper {
@@ -29,10 +25,4 @@ public class BookRentalMapper {
                 booksRental.getRentTo()
         );
     }
-
-//    public List<BooksRentalDto> mapToBooksrentalDtoList(final List<BooksRental> booksRentalList) {
-//        return booksRentalList.stream()
-//                .map(this::mapToBooksRentalDto)
-//                .collect(Collectors.toList());
-//    }
 }

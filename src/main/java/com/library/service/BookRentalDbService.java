@@ -1,61 +1,44 @@
 package com.library.service;
 
-import com.library.controller.BookRecordController;
 import com.library.domain.*;
-import com.library.mapper.BookRecordMapper;
 import com.library.mapper.BookRentalMapper;
 import com.library.repository.BooksRentalRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class BookRentalDbService {
     private final BooksRentalRepository booksRentalRepository;
     private final BookRentalMapper bookRentalMapper;
-    private final BookRecordController bookRecordController;
     private final UserDbService userDbService;
     private final BookRecordDbService bookRecordDbService;
 
     @Autowired
     public BookRentalDbService(BooksRentalRepository booksRentalRepository, BookRentalMapper bookRentalMapper,
-                               @Lazy BookRecordController bookRecordController, @Lazy UserDbService userDbService,
-                               @Lazy BookRecordDbService bookRecordDbService) {
+                               @Lazy UserDbService userDbService, @Lazy BookRecordDbService bookRecordDbService) {
         this.booksRentalRepository = booksRentalRepository;
         this.bookRentalMapper = bookRentalMapper;
-        this.bookRecordController = bookRecordController;
         this.userDbService = userDbService;
         this.bookRecordDbService = bookRecordDbService;
     }
-
-    //    public BooksRental saveRental(final BooksRental bookRental) {
-//        return booksRentalRepository.save(bookRental);
-//    }
 
     public BooksRental saveRental(final BooksRental bookRental) {
         return booksRentalRepository.save(bookRental);
     }
 
-//    public Optional<BooksRental> getRentalRecord(Long id) {
-//        return booksRentalRepository.findById(id);
-//    }
+    public BooksRentalDto getRentalRecord(Long id) throws BookRentalRecordNotFoundException, UserNotFoundException,
+            BookNotFoundException, BookRecordNotFoundException {
 
-    public BooksRentalDto getRentalRecord(Long id) throws BookRentalRecordNotFoundException, UserNotFoundException, BookNotFoundException, BookRecordNotFoundException {
         BooksRental rentalRecord = booksRentalRepository.findById(id).orElseThrow(BookRentalRecordNotFoundException::new);
         UserDto userDto = userDbService.getUser(rentalRecord.getUserId().getUserId());
         BookRecordDto bookRecordDto = bookRecordDbService.getRecord(rentalRecord.getRecordId().getRecordId());
         return bookRentalMapper.mapToBooksRentalDto(rentalRecord, userDto, bookRecordDto);
     }
 
-//    public void deleteRentalRecord(Long id) {
-//        booksRentalRepository.deleteById(id);
-//    }
+    public void deleteRentalRecord(Long id) throws BookRentalRecordNotFoundException, BookRecordNotFoundException,
+            BookNotFoundException, UserNotFoundException {
 
-    public void deleteRentalRecord(Long id) throws BookRentalRecordNotFoundException, BookRecordNotFoundException, BookNotFoundException, UserNotFoundException {
         BooksRentalDto booksRentalDto = getRentalRecord(id);
         bookRecordDbService.updateRecord(booksRentalDto.getRecordDto().getRecordId(), Status.AVAILABLE);
         booksRentalRepository.deleteById(id);
