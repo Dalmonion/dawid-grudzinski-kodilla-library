@@ -2,7 +2,6 @@ package com.library.service;
 
 import com.library.domain.Book;
 import com.library.domain.BookDto;
-import com.library.domain.BookDtoShort;
 import com.library.domain.BookNotFoundException;
 import com.library.mapper.BookMapper;
 import com.library.repository.BookRepository;
@@ -29,11 +28,6 @@ public class BookDbService {
 
     public Book findBookByTitleLong(String title) throws BookNotFoundException {
         return bookRepository.findByTitle(title).orElseThrow(BookNotFoundException::new);
-    }
-
-    public BookDtoShort findBookByTitleShort(String title) throws BookNotFoundException {
-        Book book = bookRepository.findByTitle(title).orElseThrow(BookNotFoundException::new);
-        return bookMapper.mapToBookDtoShort(book);
     }
 
     public BookDto findBookById(Long bookId) throws BookNotFoundException {

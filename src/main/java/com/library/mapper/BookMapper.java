@@ -4,7 +4,6 @@ import com.library.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,20 +27,6 @@ public class BookMapper {
                 book.getBookRecords().stream()
                         .map(BookRecord::getRecordId)
                         .collect(Collectors.toList())
-        );
-    }
-
-    public BookDtoShort mapToBookDtoShort(final Book book) {
-        List<Long> recordsIdList = book.getBookRecords().stream()
-                .map(BookRecord::getRecordId)
-                .collect(Collectors.toList());
-
-        return new BookDtoShort(
-                book.getTitleId(),
-                book.getTitle(),
-                book.getAuthor(),
-                book.getReleaseDate(),
-                recordsIdList
         );
     }
 }

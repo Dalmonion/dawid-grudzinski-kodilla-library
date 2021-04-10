@@ -2,7 +2,6 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -26,7 +25,7 @@ public final class BooksRental {
         this.rentTo = rentTo;
     }
 
-        public BooksRental(LocalDate rentFrom, LocalDate rentTo) {
+    public BooksRental(LocalDate rentFrom, LocalDate rentTo) {
         this.rentFrom = rentFrom;
         this.rentTo = rentTo;
     }
@@ -51,13 +50,13 @@ public final class BooksRental {
         return rentTo;
     }
 
-    @OneToOne (fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RECORD_ID")
     public BookRecord getRecordId() {
         return record;
     }
 
-    @OneToOne (fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     public User getUserId() {
         return user;

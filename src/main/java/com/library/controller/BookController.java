@@ -1,7 +1,6 @@
 package com.library.controller;
 
 import com.library.domain.BookDto;
-import com.library.domain.BookDtoShort;
 import com.library.domain.BookNotFoundException;
 import com.library.service.BookDbService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,6 @@ public class BookController {
     @RequestMapping(method = RequestMethod.POST, value = "createBook", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createBook(@RequestBody BookDto bookDto) {
         service.saveBook(bookDto);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "getBookByTitleShort")
-    public BookDtoShort getBookShort(@RequestParam String bookTitle) throws BookNotFoundException {
-        return service.findBookByTitleShort(bookTitle);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getBookByTitle")
