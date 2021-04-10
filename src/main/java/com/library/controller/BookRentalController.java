@@ -19,17 +19,6 @@ public class BookRentalController {
         this.service = bookRentalDbService;
     }
 
-    @GetMapping(value = "rentalRecords")
-    public BooksRentalDto getRentalRecord(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException,
-            UserNotFoundException, BookNotFoundException, BookRecordNotFoundException {
-        return service.getRentalRecord(rentRecordId);
-    }
-    @DeleteMapping(value = "rentalRecords/1")
-    public void returnTheBook(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException,
-            BookRecordNotFoundException, BookNotFoundException, UserNotFoundException {
-        service.deleteRentalRecord(rentRecordId);
-    }
-
     @PostMapping(value = "rentalRecords")
     public void rentTheBook(@RequestParam Long userId, @RequestParam String bookTitle,
                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate rentUntil)
@@ -37,4 +26,15 @@ public class BookRentalController {
         service.rent(userId, bookTitle, rentUntil);
     }
 
+    @GetMapping(value = "rentalRecords")
+    public BooksRentalDto getRentalRecord(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException,
+            UserNotFoundException, BookNotFoundException, BookRecordNotFoundException {
+        return service.getRentalRecord(rentRecordId);
+    }
+
+    @DeleteMapping(value = "rentalRecords/1")
+    public void returnTheBook(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException,
+            BookRecordNotFoundException, BookNotFoundException, UserNotFoundException {
+        service.deleteRentalRecord(rentRecordId);
+    }
 }
