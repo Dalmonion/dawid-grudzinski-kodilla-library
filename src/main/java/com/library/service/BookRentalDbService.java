@@ -18,13 +18,18 @@ public class BookRentalDbService {
     private final BooksRentalRepository booksRentalRepository;
     private final BookRentalMapper bookRentalMapper;
     private final BookRecordController bookRecordController;
+    private final UserDbService userDbService;
+    private final BookRecordDbService bookRecordDbService;
 
     @Autowired
     public BookRentalDbService(BooksRentalRepository booksRentalRepository, BookRentalMapper bookRentalMapper,
-                               @Lazy BookRecordController bookRecordController) {
+                               @Lazy BookRecordController bookRecordController, @Lazy UserDbService userDbService,
+                               @Lazy BookRecordDbService bookRecordDbService) {
         this.booksRentalRepository = booksRentalRepository;
         this.bookRentalMapper = bookRentalMapper;
         this.bookRecordController = bookRecordController;
+        this.userDbService = userDbService;
+        this.bookRecordDbService = bookRecordDbService;
     }
 
     //    public BooksRental saveRental(final BooksRental bookRental) {
@@ -39,18 +44,20 @@ public class BookRentalDbService {
 //        return booksRentalRepository.findById(id);
 //    }
 
-    public BooksRentalDto getRentalRecord(Long id) throws BookRentalRecordNotFoundException {
-        Optional<BooksRental> rentalRecord = booksRentalRepository.findById(id);
-        return bookRentalMapper.mapToBooksRentalDto(rentalRecord.orElseThrow(BookRentalRecordNotFoundException::new));
+    public BooksRentalDto getRentalRecord(Long id) throws BookRentalRecordNotFoundException, UserNotFoundException, BookNotFoundException, BookRecordNotFoundException {
+        BooksRental rentalRecord = booksRentalRepository.findById(id).orElseThrow(BookRentalRecordNotFoundException::new);
+        UserDto userDto = userDbService.getUser(rentalRecord.getUserId().getUserId());
+        BookRecordDto bookRecordDto = bookRecordDbService.getRecord(rentalRecord.getRecordId().getRecordId());
+        return bookRentalMapper.mapToBooksRentalDto(rentalRecord, userDto, bookRecordDto);
     }
 
 //    public void deleteRentalRecord(Long id) {
 //        booksRentalRepository.deleteById(id);
 //    }
 
-    public void deleteRentalRecord(Long id) throws BookRentalRecordNotFoundException, BookRecordNotFoundException {
+    public void deleteRentalRecord(Long id) throws BookRentalRecordNotFoundException, BookRecordNotFoundException, BookNotFoundException, UserNotFoundException {
         BooksRentalDto booksRentalDto = getRentalRecord(id);
-        bookRecordController.updateRecordStatus(booksRentalDto.getRecord().getRecordId(), Status.AVAILABLE);
+        bookRecordDbService.updateRecord(booksRentalDto.getRecordDto().getRecordId(), Status.AVAILABLE);
         booksRentalRepository.deleteById(id);
     }
 }

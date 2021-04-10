@@ -1,11 +1,7 @@
 package com.library.controller;
 
 import com.library.domain.*;
-import com.library.mapper.BookRecordMapper;
-import com.library.mapper.BookRentalMapper;
-import com.library.mapper.UserMapper;
 import com.library.service.BookRecordDbService;
-import com.library.service.BookRentalDbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -32,7 +28,7 @@ public class BookRecordController {
 //    }
 
     @RequestMapping(method = RequestMethod.POST, value = "createRecord", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createRecord(@RequestBody BookRecordDto bookRecordDto) {
+    public void createRecord(@RequestBody BookRecordDto bookRecordDto) throws BookNotFoundException{
         service.saveRecord(bookRecordDto);
     }
 
@@ -50,7 +46,7 @@ public class BookRecordController {
 //    }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateRecordStatus")
-    public BookRecordDto updateRecordStatus(@RequestParam Long recordId, @RequestParam Status status) throws BookRecordNotFoundException {
+    public BookRecordDto updateRecordStatus(@RequestParam Long recordId, @RequestParam Status status) throws BookRecordNotFoundException, BookNotFoundException {
         return service.updateRecord(recordId, status);
     }
 
@@ -62,7 +58,7 @@ public class BookRecordController {
 //    }
 
     @RequestMapping(method = RequestMethod.GET, value = "getRecord")
-    public BookRecordDto getRecord(@RequestParam Long recordId) throws BookRecordNotFoundException {
+    public BookRecordDto getRecord(@RequestParam Long recordId) throws BookNotFoundException, BookRecordNotFoundException {
         return service.getRecord(recordId);
     }
 
@@ -82,7 +78,7 @@ public class BookRecordController {
 //    }
 
     @RequestMapping(method = RequestMethod.GET, value = "getAvailableRecords")
-    public List<BookRecordDto> getAvailableRecords(@RequestParam String bookTitle) throws BookNotFoundException {
+    public List<BookRecordDto> getAvailableRecords(@RequestParam String bookTitle) throws BookNotFoundException, BookRecordNotFoundException {
         return service.getAvailableRecordsByBookId(bookTitle);
     }
 

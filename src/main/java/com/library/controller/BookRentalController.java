@@ -1,9 +1,6 @@
 package com.library.controller;
 
-import com.library.domain.BookRecordNotFoundException;
-import com.library.domain.BookRentalRecordNotFoundException;
-import com.library.domain.BooksRentalDto;
-import com.library.domain.Status;
+import com.library.domain.*;
 import com.library.mapper.BookRentalMapper;
 import com.library.service.BookRentalDbService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +27,7 @@ public class BookRentalController {
 //    }
 
     @RequestMapping(method = RequestMethod.GET, value = "getRentalRecord")
-    public BooksRentalDto getRentalRecord(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException {
+    public BooksRentalDto getRentalRecord(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException, UserNotFoundException, BookNotFoundException, BookRecordNotFoundException {
         return service.getRentalRecord(rentRecordId);
     }
 
@@ -42,7 +39,7 @@ public class BookRentalController {
 //    }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "returnBook")
-    public void returnTheBook(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException, BookRecordNotFoundException {
+    public void returnTheBook(@RequestParam Long rentRecordId) throws BookRentalRecordNotFoundException, BookRecordNotFoundException, BookNotFoundException, UserNotFoundException {
         service.deleteRentalRecord(rentRecordId);
     }
 

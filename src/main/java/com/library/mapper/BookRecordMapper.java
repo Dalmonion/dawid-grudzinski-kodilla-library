@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class BookRecordMapper {
 
-    private BookMapper bookMapper;
+//    private BookMapper bookMapper;
 //    private BookController bookController;
 
 //    @Autowired
@@ -20,13 +20,12 @@ public class BookRecordMapper {
 //        this.bookController = bookController;
 //    }
 //
-    @Autowired
-    public void setBookMapper(BookMapper bookMapper) {
-        this.bookMapper = bookMapper;
-    }
+//    @Autowired
+//    public void setBookMapper(BookMapper bookMapper) {
+//        this.bookMapper = bookMapper;
+//    }
 
-    public BookRecord mapToBookRecord(final BookRecordDto bookRecordDto) {
-        Book book = bookMapper.mapToBook(bookRecordDto.getBook());
+    public BookRecord mapToBookRecord(final BookRecordDto bookRecordDto, final Book book) {
         return new BookRecord(
                 bookRecordDto.getRecordId(),
                 bookRecordDto.getStatus(),
@@ -43,8 +42,7 @@ public class BookRecordMapper {
 //        );
 //    }
 
-    public BookRecordDto mapToBookRecordDto(final BookRecord bookRecord) {
-        BookDto bookDto = bookMapper.mapToBookDto(bookRecord.getBook());
+    public BookRecordDto mapToBookRecordDto(final BookRecord bookRecord, BookDto bookDto) {
         return new BookRecordDto(
                 bookRecord.getRecordId(),
                 bookRecord.getStatus(),
@@ -52,31 +50,33 @@ public class BookRecordMapper {
         );
     }
 
-    public List<BookRecordDto> mapToBookRecordDtoList(final List<BookRecord> bookRecordList) {
-        return bookRecordList.stream()
-                .map(this::mapToBookRecordDto)
-                .collect(Collectors.toList());
-    }
+//    public BookRecordDtoShort mapToBookRecordDtoShort(final BookRecord bookRecord) {
+//        return new BookRecordDtoShort(
+//                bookRecord.getRecordId(),
+//                bookRecord.getStatus(),
+//                bookRecord.getBook().getTitleId()
+//        );
+//    }
 
-    public List<BookRecord> mapToBookRecordList(final List<BookRecordDto> bookRecordDtoList) {
+    public List<BookRecordDto> mapToBookRecordDtoList(final List<BookRecord> bookRecordList, BookDto bookDto) {
+        List<BookRecordDto> resultList = new ArrayList<>();
+        bookRecordList.forEach(bookRecord -> {
+            resultList.add(mapToBookRecordDto(bookRecord, bookDto));
+        });
 
-            return bookRecordDtoList.stream()
-                    .map(this::mapToBookRecord)
-                    .collect(Collectors.toList());
+        return resultList;
     }
+//
+//    public List<BookRecord> mapToBookRecordList(final List<BookRecordDto> bookRecordDtoList) {
+//            return bookRecordDtoList.stream()
+//                    .map(this::mapToBookRecord)
+//                    .collect(Collectors.toList());
+//    }
 
-    public BookRecordDtoShort mapToBookRecordDtoShort(final BookRecord bookRecord) {
-        return new BookRecordDtoShort(
-                bookRecord.getRecordId(),
-                bookRecord.getStatus(),
-                bookRecord.getBook().getTitleId()
-        );
-    }
-
-    public List<BookRecordDtoShort> mapToBookRecordDtoListShort(final List<BookRecord> bookRecordList) {
-        return bookRecordList.stream()
-                .map(this::mapToBookRecordDtoShort)
-                .collect(Collectors.toList());
-    }
+//    public List<BookRecordDtoShort> mapToBookRecordDtoListShort(final List<BookRecord> bookRecordList) {
+//        return bookRecordList.stream()
+//                .map(this::mapToBookRecordDtoShort)
+//                .collect(Collectors.toList());
+//    }
 
 }

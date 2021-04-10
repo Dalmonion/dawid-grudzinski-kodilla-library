@@ -1,8 +1,7 @@
 package com.library.mapper;
 
 
-import com.library.domain.BooksRental;
-import com.library.domain.BooksRentalDto;
+import com.library.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,29 +10,29 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookRentalMapper {
-    public BooksRental mapToBooksRental(final BooksRentalDto booksRentalDto) {
+    public BooksRental mapToBooksRental(final BooksRentalDto booksRentalDto, User user, BookRecord bookRecord) {
         return new BooksRental(
                 booksRentalDto.getId(),
-                booksRentalDto.getUser(),
-                booksRentalDto.getRecord(),
+                user,
+                bookRecord,
                 booksRentalDto.getRentFrom(),
                 booksRentalDto.getRentTo()
         );
     }
 
-    public BooksRentalDto mapToBooksRentalDto(final BooksRental booksRental) {
+    public BooksRentalDto mapToBooksRentalDto(final BooksRental booksRental, UserDto userDto, BookRecordDto bookRecordDto) {
         return new BooksRentalDto(
                 booksRental.getId(),
-                booksRental.getUserId(),
-                booksRental.getRecordId(),
+                userDto,
+                bookRecordDto,
                 booksRental.getRentFrom(),
                 booksRental.getRentTo()
         );
     }
 
-    public List<BooksRentalDto> mapToBooksrentalDtoList(final List<BooksRental> booksRentalList) {
-        return booksRentalList.stream()
-                .map(this::mapToBooksRentalDto)
-                .collect(Collectors.toList());
-    }
+//    public List<BooksRentalDto> mapToBooksrentalDtoList(final List<BooksRental> booksRentalList) {
+//        return booksRentalList.stream()
+//                .map(this::mapToBooksRentalDto)
+//                .collect(Collectors.toList());
+//    }
 }

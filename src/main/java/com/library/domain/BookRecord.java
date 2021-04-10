@@ -3,6 +3,7 @@ package com.library.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,6 +22,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 @Table(name = "BOOKS_RECORD")
 public final class BookRecord {
     private Long recordId;
@@ -54,15 +56,4 @@ public final class BookRecord {
         return book;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    private void setRecordId(Long recordId) {
-        this.recordId = recordId;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }

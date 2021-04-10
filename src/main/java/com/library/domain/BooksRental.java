@@ -2,6 +2,7 @@ package com.library.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,7 +19,14 @@ public final class BooksRental {
     private LocalDate rentFrom;
     private LocalDate rentTo;
 
-    public BooksRental(LocalDate rentFrom, LocalDate rentTo) {
+    public BooksRental(User user, BookRecord record, LocalDate rentFrom, LocalDate rentTo) {
+        this.user = user;
+        this.record = record;
+        this.rentFrom = rentFrom;
+        this.rentTo = rentTo;
+    }
+
+        public BooksRental(LocalDate rentFrom, LocalDate rentTo) {
         this.rentFrom = rentFrom;
         this.rentTo = rentTo;
     }

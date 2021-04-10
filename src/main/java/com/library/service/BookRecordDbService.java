@@ -22,30 +22,26 @@ import java.util.Optional;
 public class BookRecordDbService {
 
     private final BookRecordRepository bookRecordRepository;
-    private final BookMapper bookMapper;
     private final BookRecordMapper bookRecordMapper;
-    private final BookController bookController;
-    private final UserController userController;
     private final UserMapper userMapper;
-    private final BookRentalMapper bookRentalMapper;
     private final BookRentalDbService bookRentalDbService;
+    private final BookDbService bookDbService;
+    private final UserDbService userDbService;
 
     public BookRecordDbService(BookRecordRepository bookRecordRepository, BookRecordMapper bookRecordMapper,
-                               BookController bookController, UserController userController, UserMapper userMapper,
-                               BookRentalMapper bookRentalMapper, BookRentalDbService bookRentalDbService, BookMapper bookMapper) {
+                               UserMapper userMapper, BookRentalDbService bookRentalDbService,
+                               BookDbService bookDbService, UserDbService userDbService) {
         this.bookRecordRepository = bookRecordRepository;
         this.bookRecordMapper = bookRecordMapper;
-        this.bookController = bookController;
-        this.userController = userController;
         this.userMapper = userMapper;
-        this.bookRentalMapper = bookRentalMapper;
         this.bookRentalDbService = bookRentalDbService;
-        this.bookMapper = bookMapper;
+        this.bookDbService = bookDbService;
+        this.userDbService = userDbService;
     }
 
-
-    public BookRecord saveRecord(final BookRecordDto bookRecordDto) {
-        BookRecord bookRecord = bookRecordMapper.mapToBookRecord(bookRecordDto);
+    public BookRecord saveRecord(BookRecordDto bookRecordDto) throws BookNotFoundException{
+        Book book = bookDbService.findBookByIdLong(bookRecordDto.getBook().getTitleId());
+        BookRecord bookRecord = bookRecordMapper.mapToBookRecord(bookRecordDto, book);
         return bookRecordRepository.save(bookRecord);
     }
 
@@ -54,27 +50,46 @@ public class BookRecordDbService {
 //        return bookRecordRepository.save(bookRecord);
 //    }
 
-    public BookRecordDto updateRecord(Long recordId, Status status) throws BookRecordNotFoundException {
-        BookRecordDto bookRecordDto = getRecord(recordId);
-        BookRecord bookRecord = bookRecordMapper.mapToBookRecord(bookRecordDto);
+    public BookRecordDto updateRecord(Long recordId, Status status) throws BookRecordNotFoundException, BookNotFoundException {
+        BookRecord bookRecord = getRecordLong(recordId);
         bookRecord.setStatus(status);
-        BookRecord savedRecord = saveRecord(bookRecordMapper.mapToBookRecordDto(bookRecord));
-        return bookRecordMapper.mapToBookRecordDto(savedRecord);
+        BookDto bookDto = bookDbService.findBookById(bookRecord.getBook().getTitleId());
+        BookRecordDto bookRecordDto = bookRecordMapper.mapToBookRecordDto(bookRecord, bookDto);
+        BookRecord savedBookRecord = saveRecord(bookRecordDto);
+        BookDto savedBookDto = bookDbService.findBookById(savedBookRecord.getBook().getTitleId());
+        return bookRecordMapper.mapToBookRecordDto(savedBookRecord, savedBookDto);
+
     }
 
-    public BookRecordDto getRecord(Long id) throws BookRecordNotFoundException{
+//    public BookRecordDto getRecord(Long id) throws BookRecordNotFoundException{
+//        BookRecord bookRecord = bookRecordRepository.findById(id).orElseThrow(BookRecordNotFoundException::new);
+//        return bookRecordMapper.mapToBookRecordDto(bookRecord);
+//    }
+
+    public BookRecordDto getRecord(Long id) throws BookNotFoundException, BookRecordNotFoundException{
         BookRecord bookRecord = bookRecordRepository.findById(id).orElseThrow(BookRecordNotFoundException::new);
-        return bookRecordMapper.mapToBookRecordDto(bookRecord);
+        BookDto bookDto = bookDbService.findBookById(bookRecord.getBook().getTitleId());
+        return bookRecordMapper.mapToBookRecordDto(bookRecord, bookDto);
     }
+
+    private BookRecord getRecordLong(Long id) throws BookNotFoundException, BookRecordNotFoundException{
+        return bookRecordRepository.findById(id).orElseThrow(BookRecordNotFoundException::new);
+    }
+
 
 //    public List<BookRecord> getAvailableRecords() {
 //        return bookRecordRepository.retrieveAvailableRecords();
 //    }
 
-    public List<BookRecordDto> getAvailableRecordsByBookId(String bookTitle) throws BookNotFoundException{
-        BookDto bookDto = bookController.getBook(bookTitle);
+    public List<BookRecordDto> getAvailableRecordsByBookId(String bookTitle) throws BookNotFoundException, BookRecordNotFoundException{
+        BookDto bookDto = bookDbService.findBookByTitle(bookTitle);
         List<BookRecord> recordList = bookRecordRepository.getAvailableRecordsByBookId(bookDto.getTitleId());
-        return bookRecordMapper.mapToBookRecordDtoList(recordList);
+        if (recordList.isEmpty()) {
+            throw new BookRecordNotFoundException();
+        } else {
+            return bookRecordMapper.mapToBookRecordDtoList(recordList, bookDto);
+        }
+
     }
 
     public void rent(Long userId, String bookTitle, LocalDate rentUntil) throws BookRecordNotFoundException,
@@ -84,11 +99,11 @@ public class BookRecordDbService {
         if (!records.isEmpty()) {
             Long recordId = records.get(0).getRecordId();
             BookRecordDto recordDto = getRecord(recordId);
-            UserDto userDto = userController.getUser(userId);
-            BooksRentalDto booksRentalDto = new BooksRentalDto(userMapper.mapToUser(userDto),
-                    bookRecordMapper.mapToBookRecord(recordDto), LocalDate.now(), rentUntil);
+            UserDto userDto = userDbService.getUser(userId);
+            Book book = bookDbService.findBookByTitleLong(bookTitle);
 
-            BooksRental booksRental = bookRentalMapper.mapToBooksRental(booksRentalDto);
+            BooksRental booksRental = new BooksRental(userMapper.mapToUser(userDto),
+                    bookRecordMapper.mapToBookRecord(recordDto, book), LocalDate.now(), rentUntil);
             bookRentalDbService.saveRental(booksRental);
             updateRecord(recordId, Status.RENTED);
         }

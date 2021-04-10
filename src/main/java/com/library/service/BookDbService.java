@@ -9,6 +9,8 @@ import com.library.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class BookDbService {
@@ -17,13 +19,17 @@ public class BookDbService {
     private final BookMapper bookMapper;
 
     public Book saveBook(final BookDto bookDto) {
-        Book book = bookMapper.mapToBook(bookDto);
+        Book book = bookMapper.mapToBookForFirstSave(bookDto);
         return bookRepository.save(book);
     }
 
     public BookDto findBookByTitle(String title) throws BookNotFoundException{
         Book book = bookRepository.findByTitle(title).orElseThrow(BookNotFoundException::new);
         return bookMapper.mapToBookDto(book);
+    }
+
+    public Book findBookByTitleLong(String title) throws BookNotFoundException{
+        return bookRepository.findByTitle(title).orElseThrow(BookNotFoundException::new);
     }
 
     public BookDtoShort findBookByTitleShort(String title) throws BookNotFoundException {
@@ -34,6 +40,10 @@ public class BookDbService {
     public BookDto findBookById(Long bookId) throws BookNotFoundException {
         Book book = bookRepository.findByTitleId(bookId).orElseThrow(BookNotFoundException::new);
         return bookMapper.mapToBookDto(book);
+    }
+
+    public Book findBookByIdLong(Long bookId) throws BookNotFoundException {
+        return bookRepository.findByTitleId(bookId).orElseThrow(BookNotFoundException::new);
     }
 
 }
